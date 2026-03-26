@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Важный вопрос 💕</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-primary: #FF2B2B;
+      --color-primary-dark: #c51616;
+      --color-primary-soft: #ff8f8f;
+      --color-primary-pale: #ffe1e1;
+      --color-cream: #fff4ee;
+      --color-text-strong: #8f1111;
+      --color-text-soft: #bb4a4a;
+      --color-surface: rgba(255,255,255,0.82);
+      --color-border: rgba(255,43,43,0.22);
+      --shadow-main: 0 24px 70px rgba(255,43,43,0.22);
+      --shadow-accent: rgba(255,43,43,0.38);
+      --shadow-accent-strong: rgba(255,43,43,0.52);
+      --color-secondary: #531111;
+      --shadow-secondary: rgba(83,17,17,0.35);
+      --shadow-secondary-strong: rgba(83,17,17,0.55);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-primary-pale) 52%, #ffd2c6 100%);
+      font-family: 'Georgia', serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Floating logo background */
+    .bg-logos {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .bg-logo {
+      position: absolute;
+      animation: floatUp linear infinite;
+      opacity: 0.22;
+      color: rgba(255, 43, 43, 0.82);
+      filter: drop-shadow(0 8px 24px rgba(255, 43, 43, 0.18));
+      transform-origin: center;
+    }
+
+    .bg-logo svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) rotate(0deg); opacity: 0.3; }
+      100% { transform: translateY(-10vh) rotate(20deg); opacity: 0; }
+    }
+
+    /* Main card */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: var(--color-surface);
+      backdrop-filter: blur(14px);
+      border-radius: 32px;
+      padding: 56px 64px 130px;
+      text-align: center;
+      box-shadow: var(--shadow-main);
+      max-width: 480px;
+      width: 90%;
+      border: 1.5px solid var(--color-border);
+    }
+
+    .emoji-top {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: 16px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.12); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--color-text-strong);
+      line-height: 1.3;
+      margin-bottom: 40px;
+      text-shadow: 0 1px 3px rgba(143,17,17,0.12);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 44px;
+      font-size: 1.3rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 36px 28px 110px;
+        border-radius: 24px;
+        width: 92%;
+      }
+      .emoji-top { font-size: 2.8rem; }
+      h1 { font-size: 1.5rem; margin-bottom: 28px; }
+      .btn { padding: 14px 32px; font-size: 1.1rem; }
+      .celebration-text { font-size: 1.7rem; }
+      .celebration-sub  { font-size: 1rem; }
+      .celebration-emoji { font-size: 3.8rem; }
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+      box-shadow: 0 6px 24px var(--shadow-accent);
+    }
+
+    .btn-yes:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 32px var(--shadow-accent-strong);
+    }
+
+    .btn-no {
+      background: linear-gradient(135deg, #7a1616, var(--color-secondary));
+      color: white;
+      box-shadow: 0 6px 24px var(--shadow-secondary);
+      position: fixed;
+      transition: none;
+      animation: noGlow 1.2s ease-in-out infinite alternate;
+      z-index: 50;
+    }
+
+    @keyframes noGlow {
+      from { box-shadow: 0 6px 24px var(--shadow-secondary); transform: scale(1); }
+      to   { box-shadow: 0 8px 36px var(--shadow-secondary-strong); transform: scale(1.06); }
+    }
+
+    /* ====== CELEBRATION OVERLAY ====== */
+    #celebration {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: linear-gradient(135deg, #fff4ee, #ffd9d3, #ffc5c5);
+      animation: fadeIn 0.5s ease;
+    }
+
+    #celebration.show { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .celebration-emoji {
+      font-size: 5rem;
+      animation: bounce 0.6s ease infinite alternate;
+      margin-bottom: 12px;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-18px); }
+    }
+
+    .celebration-text {
+      font-size: 2.4rem;
+      color: var(--color-text-strong);
+      font-weight: bold;
+      text-align: center;
+      padding: 0 20px;
+      line-height: 1.35;
+      text-shadow: 0 2px 8px rgba(143,17,17,0.18);
+    }
+
+    .celebration-sub {
+      margin-top: 14px;
+      font-size: 1.2rem;
+      color: var(--color-text-soft);
+      text-align: center;
+    }
+
+    /* Confetti canvas */
+    #confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background floating logos -->
+  <div class="bg-logos" id="bgLogos"></div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti"></canvas>
+
+  <!-- Main card -->
+  <div class="card" id="mainCard">
+    <span class="emoji-top">💕</span>
+    <h1>Ты самая лучшая?</h1>
+    <div class="buttons">
+      <button class="btn btn-yes" id="btnYes" onclick="celebrate()">Да 💖</button>
+    </div>
+  </div>
+
+  <!-- Кнопка "Нет" вне карточки, чтобы backdrop-filter не ломал position:fixed -->
+  <button class="btn btn-no" id="btnNo">Нет 🎁</button>
+
+  <!-- Celebration screen -->
+  <div id="celebration">
+    <div class="celebration-emoji">🥰</div>
+    <div class="celebration-text">Я так и знал!<br>Ты лучше всех на свете! 💕</div>
+    <div class="celebration-sub">И ни капли сомнений не было ✨</div>
+  </div>
+
+<script>
+  /* ── Floating background logos ── */
+  const bgLogos = document.getElementById('bgLogos');
+  const logoSvg = `
+    <svg viewBox="0 0 125 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M124.926 149.16C124.926 153.645 121.676 157.57 117.005 158.728L82.7207 167.223C81.5393 167.515 80.3515 167.774 79.1484 167.978C75.6783 168.564 67.9234 169.763 62.4629 169.763C57.0023 169.763 49.2475 168.564 45.7773 167.978C44.5743 167.774 43.3865 167.515 42.2051 167.223L7.9209 158.728C3.24937 157.57 0 153.645 0 149.16V135.103H124.926V149.16ZM98.2109 0C104.887 0 110.863 3.841 113.207 9.63867L123.227 34.417C124.35 37.1967 124.926 40.1417 124.926 43.1104V128.171H0V43.1104C0 40.1417 0.575295 37.1967 1.69922 34.417L11.7188 9.63867C14.063 3.84099 20.0386 0 26.7148 0H98.2109ZM16.5498 101.041C12.1271 101.041 8.54199 104.367 8.54199 108.469C8.54217 112.57 12.1272 115.895 16.5498 115.896C20.9724 115.896 24.5574 112.57 24.5576 108.469C24.5576 104.367 20.9726 101.041 16.5498 101.041ZM107.309 101.041C102.886 101.041 99.2998 104.367 99.2998 108.469C99.3 112.57 102.886 115.896 107.309 115.896C111.731 115.895 115.316 112.57 115.316 108.469C115.316 104.367 111.731 101.041 107.309 101.041ZM21.3545 41.5918C14.2782 41.5919 8.54199 46.9126 8.54199 53.4756V63.3779C8.54199 69.9409 14.2782 75.2616 21.3545 75.2617H102.504C109.58 75.2615 115.316 69.9408 115.316 63.3779V53.4756C115.316 46.9127 109.58 41.592 102.504 41.5918H21.3545ZM64.3408 12.376C63.2693 11.8403 62.01 11.8309 60.9307 12.3506L60.7197 12.4521C60.3653 12.6229 60.039 12.8471 59.752 13.1162L58.9756 13.8438C58.8116 13.9974 58.6612 14.165 58.5264 14.3447L57.6924 15.457C57.6556 15.506 57.6245 15.5593 57.5996 15.6152C57.4185 16.0224 56.9438 16.2086 56.5342 16.0332L55.792 15.7148C55.5113 15.5945 55.2022 15.5552 54.9004 15.6016L53.8662 15.7607C53.2935 15.8489 52.7478 16.0644 52.2695 16.3916L51.2666 17.0781L50.6465 17.6299C50.1941 18.032 50.3459 18.7723 50.9199 18.9639C50.969 18.9802 51.0166 19.0017 51.0615 19.0273L51.7686 19.4316C52.0994 19.6207 52.4014 19.8577 52.6631 20.1348L53.8154 21.3545L54.5488 22.3818C54.6663 22.5463 54.771 22.7197 54.8613 22.9004L55.6348 24.4492L56.4541 25.9961L57.0518 26.8232C57.4357 27.3548 57.9487 27.7804 58.542 28.0596L58.6104 28.0918C58.9905 28.2706 59.3971 28.3864 59.8145 28.4346L61.0117 28.5723C61.3677 28.6133 61.7285 28.5908 62.0762 28.5039C62.45 28.4105 62.8383 28.3899 63.2197 28.4443L63.7246 28.5166C64.2704 28.5946 64.8272 28.5548 65.3564 28.4004L65.8535 28.2559C66.4347 28.0863 66.9676 27.7822 67.4102 27.3691L67.5928 27.1992C67.9297 26.8848 68.208 26.5128 68.4141 26.1006L69.376 24.1758L70.377 22.6289L71.1758 21.4971C71.3705 21.2212 71.601 20.972 71.8604 20.7559L73.5293 19.3652C73.6115 19.2967 73.703 19.2398 73.8008 19.1963C74.5298 18.8723 74.7214 17.9258 74.1758 17.3438L74.0596 17.2207C73.971 17.1262 73.8687 17.0452 73.7559 16.9814L72.3721 16.1992C72.0152 15.9975 71.6285 15.8538 71.2266 15.7734L71.0322 15.7344C70.3684 15.6017 69.6798 15.6738 69.0576 15.9404C68.6847 16.1002 68.4439 16.1304 68.1025 16.3496C67.9237 16.4645 67.6762 16.3881 67.6221 16.1826L67.3379 15.0996C67.3021 14.9639 67.238 14.8372 67.1504 14.7275L66.5449 13.9707C66.3104 13.6775 66.0343 13.4198 65.7256 13.2061L65.2344 12.8662C65.0838 12.762 64.9255 12.6688 64.7617 12.5869L64.3408 12.376Z" fill="currentColor"/>
+    </svg>
+  `;
+
+  for (let i = 0; i < 18; i++) {
+    const logo = document.createElement('span');
+    logo.className = 'bg-logo';
+    logo.innerHTML = logoSvg;
+    logo.style.left = Math.random() * 100 + 'vw';
+    logo.style.width = (36 + Math.random() * 54) + 'px';
+    const dur = 7 + Math.random() * 12;
+    const delay = -Math.random() * dur;
+    logo.style.animation = `floatUp ${dur}s ${delay}s linear infinite`;
+    bgLogos.appendChild(logo);
+  }
+
+  /* ── Runaway "Нет" button ── */
+  const btnNo = document.getElementById('btnNo');
+  let noX = 0, noY = 0;
+  let placed = false;
+
+  function placeNoButton() {
+    const w = btnNo.offsetWidth  || 120;
+    const h = btnNo.offsetHeight || 52;
+    const yesRect = document.getElementById('btnYes').getBoundingClientRect();
+    // Ставим под «Да» по центру
+    noX = yesRect.left + (yesRect.width - w) / 2;
+    noY = yesRect.bottom + 16;
+    // Страховка от выхода за экран
+    noX = Math.max(16, Math.min(window.innerWidth  - w - 16, noX));
+    noY = Math.max(16, Math.min(window.innerHeight - h - 16, noY));
+    btnNo.style.left = noX + 'px';
+    btnNo.style.top  = noY + 'px';
+    placed = true;
+  }
+
+  window.addEventListener('load', placeNoButton);
+  window.addEventListener('resize', () => { placed = false; placeNoButton(); });
+
+  function teleportAway(mouseX, mouseY) {
+    const w   = btnNo.offsetWidth  || 120;
+    const h   = btnNo.offsetHeight || 52;
+    const pad = 20;
+    const areaW = window.innerWidth  - w - pad * 2;
+    const areaH = window.innerHeight - h - pad * 2;
+
+    if (areaW <= 0 || areaH <= 0) return; // экран слишком мал
+
+    let bestX = noX, bestY = noY, bestDist = 0;
+    for (let i = 0; i < 20; i++) {
+      const rx = pad + Math.random() * areaW;
+      const ry = pad + Math.random() * areaH;
+      const d  = Math.hypot(mouseX - (rx + w / 2), mouseY - (ry + h / 2));
+      if (d > bestDist) { bestDist = d; bestX = rx; bestY = ry; }
+    }
+
+    noX = bestX; noY = bestY;
+    btnNo.style.left = noX + 'px';
+    btnNo.style.top  = noY + 'px';
+  }
+
+  // Убегает заранее при приближении — не ждёт касания
+  document.addEventListener('mousemove', (e) => {
+    if (!placed) return;
+    const w  = btnNo.offsetWidth  || 120;
+    const h  = btnNo.offsetHeight || 52;
+    const bx = noX + w / 2;
+    const by = noY + h / 2;
+    if (Math.hypot(e.clientX - bx, e.clientY - by) < 100) {
+      teleportAway(e.clientX, e.clientY);
+    }
+  });
+
+  // Страховка: если курсор всё же коснулся — мгновенный прыжок
+  btnNo.addEventListener('mouseenter', (e) => teleportAway(e.clientX, e.clientY));
+
+  document.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    const w  = btnNo.offsetWidth  || 120;
+    const h  = btnNo.offsetHeight || 52;
+    const bx = noX + w / 2;
+    const by = noY + h / 2;
+    if (Math.hypot(t.clientX - bx, t.clientY - by) < 100) {
+      teleportAway(t.clientX, t.clientY);
+    }
+  }, { passive: true });
+
+  // На мобильном touchstart тоже триггерит побег — до tap не доходит
+  document.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    const w  = btnNo.offsetWidth  || 120;
+    const h  = btnNo.offsetHeight || 52;
+    const bx = noX + w / 2;
+    const by = noY + h / 2;
+    if (Math.hypot(t.clientX - bx, t.clientY - by) < 60) {
+      teleportAway(t.clientX, t.clientY);
+    }
+  }, { passive: true });
+
+  /* ── Confetti ── */
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let animId;
+
+  function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const COLORS = ['#FF2B2B', '#c51616', '#ff8f8f', '#ffd0d0', '#7a1616', '#ffb347', '#fff0e8'];
+
+  function spawnParticles() {
+    for (let i = 0; i < 160; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: -10,
+        r: 5 + Math.random() * 7,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        vx: (Math.random() - 0.5) * 4,
+        vy: 2 + Math.random() * 5,
+        rot: Math.random() * Math.PI * 2,
+        rotV: (Math.random() - 0.5) * 0.2,
+        shape: Math.random() > 0.5 ? 'rect' : 'heart',
+        alpha: 1,
+      });
+    }
+  }
+
+  function drawHeart(cx, cy, size) {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy + size * 0.3);
+    ctx.bezierCurveTo(cx, cy, cx - size, cy, cx - size, cy + size * 0.4);
+    ctx.bezierCurveTo(cx - size, cy + size * 0.9, cx, cy + size * 1.3, cx, cy + size * 1.6);
+    ctx.bezierCurveTo(cx, cy + size * 1.3, cx + size, cy + size * 0.9, cx + size, cy + size * 0.4);
+    ctx.bezierCurveTo(cx + size, cy, cx, cy, cx, cy + size * 0.3);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, i) => {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.vy += 0.07;
+      p.rot += p.rotV;
+      if (p.y > canvas.height + 20) p.alpha -= 0.05;
+
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.fillStyle = p.color;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+      } else {
+        drawHeart(0, -p.r * 0.8, p.r * 0.6);
+      }
+      ctx.restore();
+    });
+    particles = particles.filter(p => p.alpha > 0);
+    if (particles.length > 0) {
+      animId = requestAnimationFrame(animateConfetti);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  /* ── Celebrate on "Да" ── */
+  function celebrate() {
+    document.getElementById('mainCard').style.display = 'none';
+    btnNo.style.display = 'none';
+    document.getElementById('celebration').classList.add('show');
+    spawnParticles();
+    animateConfetti();
+    // extra bursts
+    setTimeout(spawnParticles, 800);
+    setTimeout(spawnParticles, 1600);
+  }
+</script>
+</body>
+</html>
